@@ -194,43 +194,17 @@ class KAsyncMoveCategoryEntries extends KJobHandlerWorker
 		$categoryEntriesList = KBatchBase::$kClient->categoryEntry->listAction($categoryEntryFilter, $categoryEntryPager);
 		while(count($categoryEntriesList->objects))
 		{
-			$entryIds = array();
-			$ancestor = $data->destCategoryId;
-			if(array_key_exists($ancestor, $this->ancestors))
-				$ancestor = $this->ancestors[$ancestor];
-			
-			$addedCategoryEntriesResults = $this->addCategoryEntries($categoryEntriesList, $ancestor, $entryIds);
-			
-			$categoryDeleted = false;
-			if(	is_array($addedCategoryEntriesResults[0]) && isset($addedCategoryEntriesResults[0]['code']) && ($addedCategoryEntriesResults[0]['code'] == self::CATEGORY_NOT_FOUND))
-				$categoryDeleted = true;
-			
-			
-			if($categoryDeleted) {
-				$ancestor = $this->getDeepestLiveAncestor($data->destCategoryId, $data->destCategoryFullIds, true);
-				// In case the category isn't found since it was just deleted, recall with the matching ancestor
-				if($ancestor) {
-					$data->destCategoryId = $ancestor;
-					continue;
-				}
-			}
-			
 			KBatchBase::$kClient->startMultiRequest();
-			foreach($addedCategoryEntriesResults as $index => $addedCategoryEntryResult)
+			foreach($categoryEntriesList->objects as $oldCategoryEntry)
 			{
-				$code = null;
-				if(	is_array($addedCategoryEntryResult) && isset($addedCategoryEntryResult['code']))
-					$code = $addedCategoryEntryResult['code'];
-						
-				if(!is_null($code) && !in_array($code, array(self::CATEGORY_ENTRY_ALREADY_EXISTS, self::INVALID_ENTRY_ID, self::CATEGORY_NOT_FOUND)))
-					continue;
-					
+				/* @var $oldCategoryEntry KalturaCategoryEntry */
 				if($data->copyOnly)
 					continue;
 					
-				KBatchBase::$kClient->categoryEntry->delete($entryIds[$index], $srcCategoryId);
+				KBatchBase::$kClient->categoryEntry->delete($oldCategoryEntry->entryId, $srcCategoryId);
 			}
 			$deletedCategoryEntriesResults = KBatchBase::$kClient->doMultiRequest();
+			
 			if(is_null($deletedCategoryEntriesResults))
 				$deletedCategoryEntriesResults = array();
 			
@@ -244,6 +218,19 @@ class KAsyncMoveCategoryEntries extends KJobHandlerWorker
 			}
 			
 			$movedEntries += count($deletedCategoryEntriesResults);
+			
+			KBatchBase::$kClient->startMultiRequest();
+			$entryIds = array();
+			foreach($categoryEntriesList->objects as $oldCategoryEntry)
+			{
+				/* @var $categoryEntry KalturaCategoryEntry */
+				$newCategoryEntry = new KalturaCategoryEntry();
+				$newCategoryEntry->entryId = $oldCategoryEntry->entryId;
+				$newCategoryEntry->categoryId = $data->destCategoryId;
+				KBatchBase::$kClient->categoryEntry->add($newCategoryEntry);
+				$entryIds[] = $oldCategoryEntry->entryId;
+			}
+			$addedCategoryEntriesResults = KBatchBase::$kClient->doMultiRequest();
 			
 			if($data->copyOnly)
 			{
