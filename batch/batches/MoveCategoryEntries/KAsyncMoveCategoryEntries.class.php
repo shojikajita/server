@@ -154,33 +154,16 @@ class KAsyncMoveCategoryEntries extends KJobHandlerWorker
 		while(count($categoryEntriesList->objects))
 		{
 			KBatchBase::$kClient->startMultiRequest();
-			$entryIds = array();
 			foreach($categoryEntriesList->objects as $oldCategoryEntry)
 			{
-				/* @var $categoryEntry KalturaCategoryEntry */
-				$newCategoryEntry = new KalturaCategoryEntry();
-				$newCategoryEntry->entryId = $oldCategoryEntry->entryId;
-				$newCategoryEntry->categoryId = $data->destCategoryId;
-				KBatchBase::$kClient->categoryEntry->add($newCategoryEntry);
-				$entryIds[] = $oldCategoryEntry->entryId;
-			}
-			$addedCategoryEntriesResults = KBatchBase::$kClient->doMultiRequest();
-	
-			KBatchBase::$kClient->startMultiRequest();
-			foreach($addedCategoryEntriesResults as $index => $addedCategoryEntryResult)
-			{
-				if(	is_array($addedCategoryEntryResult) 
-					&& isset($addedCategoryEntryResult['code']) 
-					&& !in_array($addedCategoryEntryResult['code'], array(self::CATEGORY_ENTRY_ALREADY_EXISTS, self::INVALID_ENTRY_ID))
-				)
-					continue;
-					
+				/* @var $oldCategoryEntry KalturaCategoryEntry */
 				if($data->copyOnly)
 					continue;
 					
-				KBatchBase::$kClient->categoryEntry->delete($entryIds[$index], $srcCategoryId);
+				KBatchBase::$kClient->categoryEntry->delete($oldCategoryEntry->entryId, $srcCategoryId);
 			}
 			$deletedCategoryEntriesResults = KBatchBase::$kClient->doMultiRequest();
+			
 			if(is_null($deletedCategoryEntriesResults))
 				$deletedCategoryEntriesResults = array();
 			
@@ -194,6 +177,19 @@ class KAsyncMoveCategoryEntries extends KJobHandlerWorker
 			}
 			
 			$movedEntries += count($deletedCategoryEntriesResults);
+			
+			KBatchBase::$kClient->startMultiRequest();
+			$entryIds = array();
+			foreach($categoryEntriesList->objects as $oldCategoryEntry)
+			{
+				/* @var $categoryEntry KalturaCategoryEntry */
+				$newCategoryEntry = new KalturaCategoryEntry();
+				$newCategoryEntry->entryId = $oldCategoryEntry->entryId;
+				$newCategoryEntry->categoryId = $data->destCategoryId;
+				KBatchBase::$kClient->categoryEntry->add($newCategoryEntry);
+				$entryIds[] = $oldCategoryEntry->entryId;
+			}
+			$addedCategoryEntriesResults = KBatchBase::$kClient->doMultiRequest();
 			
 			if($data->copyOnly)
 			{
