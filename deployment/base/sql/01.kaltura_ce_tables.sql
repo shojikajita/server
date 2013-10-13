@@ -2170,4 +2170,3 @@ CREATE TABLE `api_server`
 	`custom_data` TEXT,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-

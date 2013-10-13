@@ -278,20 +278,20 @@ class SphinxCategoryKuserCriteria extends SphinxCriteria
 	{
 		switch ($permissionLevel)
 		{
-			case CategoryKuserPermissionLevel::MODERATOR:
-				$negativePermissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
-				break;
-			case CategoryKuserPermissionLevel::CONTRIBUTOR:
-				$negativePermissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
-				break;
-			case CategoryKuserPermissionLevel::MEMBER:
-				$negativePermissionNamesArr[] = PermissionName::CATEGORY_EDIT;
-				$negativePermissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
-				$negativePermissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
-				break;
-		}
-		
-		return $negativePermissionNamesArr;		
+	      case CategoryKuserPermissionLevel::MODERATOR:
+	        $negativePermissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
+	        break;
+	      case CategoryKuserPermissionLevel::CONTRIBUTOR:
+	        $negativePermissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
+	        break;
+	      case CategoryKuserPermissionLevel::MEMBER:
+	        $negativePermissionNamesArr[] = PermissionName::CATEGORY_EDIT;
+	        $negativePermissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
+	        $negativePermissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
+	        break;
+	    }
+	    
+	    return $negativePermissionNamesArr; 	
 	}
 	
 	public function translateToSearchIndexFieldValue($fieldName, $toTranslate)
