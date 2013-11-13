@@ -37,6 +37,7 @@ class kOrCondition extends kCondition
 			}
 		}
 		
+		KalturaLog::info('None of the conditions have been fulfilled. OR condition returns FALSE');
 		return false;
 	}
 }
