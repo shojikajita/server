@@ -8,7 +8,6 @@ class KalturaOrCondition extends KalturaCondition
 	/**
 	 * The type of the access control condition
 	 * 
-	 * @readonly
 	 * @var KalturaConditionArray
 	 */
 	public $conditions;
