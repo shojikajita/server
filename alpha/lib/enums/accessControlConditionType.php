@@ -13,4 +13,5 @@ interface ConditionType extends BaseEnum
 	const FIELD_MATCH = 6;
 	const FIELD_COMPARE = 7;
 	const ASSET_PROPERTIES_COMPARE = 8;
+	const OR_CONDITION = 9;
 }

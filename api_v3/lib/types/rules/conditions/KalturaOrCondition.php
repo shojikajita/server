@@ -22,4 +22,23 @@ class KalturaOrCondition extends KalturaCondition
 	{
 		return array_merge(parent::getMapBetweenObjects(), self::$mapBetweenObjects);
 	}
+	
+	/**
+	 * Init object type
+	 */
+	public function __construct() 
+	{
+		$this->type = ConditionType::OR_CONDITION;
+	}
+	
+	/* (non-PHPdoc)
+	 * @see KalturaObject::toObject()
+	 */
+	public function toObject($dbObject = null, $skip = array())
+	{
+		if(!$dbObject)
+			$dbObject = new kOrCondition();
+			
+		return parent::toObject($dbObject, $skip);
+	}
 }
