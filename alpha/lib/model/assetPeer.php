@@ -598,4 +598,44 @@ class assetPeer extends BaseassetPeer
 	{
 		return array(assetPeer::STATUS);
 	}
+	
+	/**
+	 * Returns the smallest flavor asset whose width and height are still larger than a given frame size
+	 * 
+	 * @param string $entryId
+	 * @param int $width
+	 * @param int @height
+	 * 
+	 * @return asset
+	 */
+	public static function retrieveSmallestFlavorAsset($entryId, $width, $height)
+	{
+		$c = new Criteria();
+		$c->add(assetPeer::ENTRY_ID, $entryId);
+		$c->add(assetPeer::STATUS, flavorAsset::FLAVOR_ASSET_STATUS_READY);
+		$flavorTypes = self::retrieveAllFlavorsTypes();
+		$c->add(assetPeer::TYPE, $flavorTypes, Criteria::IN);
+		
+		$flavorAssets = self::doSelect($c);
+		if(!count($flavorAssets))
+			return null;
+			
+		if(!count($flavorAssets))
+			return null;
+			
+		$ret = null;
+		foreach($flavorAssets as $flavorAsset)
+		{
+			if(!$ret || ($ret->getHeight() > $flavorAsset->getHeight() && $ret->getWidth() > $flavorAsset->getWidth()))
+			{
+				if ($width <= $flavorAsset->getWidth() && $height <= $flavorAsset->getHeight())
+				{
+					$ret = $flavorAsset;
+				}
+			}
+			
+		}
+				
+		return $ret;
+	}
 }

@@ -724,7 +724,7 @@ class myEntryUtils
 				$capturedThumbName = $entry->getId()."_sec_{$calc_vid_sec}";
 				$capturedThumbPath = $contentPath.myContentStorage::getGeneralEntityPath("entry/tempthumb", $entry->getIntId(), $capturedThumbName, $entry->getThumbnail() , $version );
 	
-				$orig_image_path = $capturedThumbPath."temp_1.jpg";
+				$orig_image_path = $capturedThumbPath."_{$width}x{$height}_temp_1.jpg";
 	
 				// if we already captured the frame at that second, dont recapture, just use the existing file
 				if (!file_exists($orig_image_path))
@@ -738,7 +738,7 @@ class myEntryUtils
 						
 					$cache->put($orig_image_path, true);
 					
-				    $flavorAsset = assetPeer::retrieveHighestBitrateByEntryId($entry->getId(), flavorParams::TAG_THUMBSOURCE);
+				    $flavorAsset = assetPeer::retrieveSmallestFlavorAsset($entry->getId(), $width, $height);
 					if(is_null($flavorAsset))
 					{
     					$flavorAsset = assetPeer::retrieveOriginalReadyByEntryId($entry->getId());
@@ -770,7 +770,7 @@ class myEntryUtils
 						$cache->remove($orig_image_path);
 						throw new kFileSyncException('no ready filesync on current DC', kFileSyncException::FILE_DOES_NOT_EXIST_ON_CURRENT_DC);
 					}
-					myFileConverter::autoCaptureFrame($entry_data_path, $capturedThumbPath."temp_", $calc_vid_sec, -1, -1);
+					myFileConverter::autoCaptureFrame($entry_data_path, $capturedThumbPath."_{$width}x{$height}_temp_", $calc_vid_sec, $width, $height);
 					
 					$cache->remove($orig_image_path);
 				}
@@ -797,7 +797,7 @@ class myEntryUtils
 				if ($thumbParams->getSupportAnimatedThumbnail() && is_array($imageSizeArray) && $imageSizeArray[2] === IMAGETYPE_GIF)
 					$tempThumbPath = kFile::replaceExt($tempThumbPath, "gif");
 
-				$convertedImagePath = myFileConverter::convertImage($orig_image_path, $tempThumbPath, $width, $height, $type, $bgcolor, true, $quality, $src_x, $src_y, $src_w, $src_h, $density, $stripProfiles, $thumbParams, $format);
+				copy($orig_image_path, $tempThumbPath);
 			}
 			
 			// die if resize operation failed and add failed resizing to cache
