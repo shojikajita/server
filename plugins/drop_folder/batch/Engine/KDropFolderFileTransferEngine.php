@@ -432,7 +432,7 @@ class KDropFolderFileTransferEngine extends KDropFolderEngine
 			case KalturaDropFolderContentFileHandlerMatchPolicy::MATCH_EXISTING_OR_ADD_AS_NEW:
 				$matchedEntry = $this->isEntryMatch($data);
 				if($matchedEntry)
-					$this->addAsExistingContent($job, $data, $matchedEntry);
+					$this->addAsExistingContent($job, $data, $matchedEntry, $dropFolder);
 				else
 					 $this->addAsNewContent($job, $data, $dropFolder);	
 				break;			
@@ -499,7 +499,7 @@ class KDropFolderFileTransferEngine extends KDropFolderEngine
 	 * Update the matched entry with the new file and all other relevant files from the drop folder, according to the ingestion profile.
 	 *
 	 */
-	private function addAsExistingContent(KalturaBatchJob $job, KalturaDropFolderContentProcessorJobData $data, $matchedEntry = null)
+	private function addAsExistingContent(KalturaBatchJob $job, KalturaDropFolderContentProcessorJobData $data, $matchedEntry = null, KalturaDropFolder $dropFolder)
 	{	    
 		// check for matching entry and flavor
 		if(!$matchedEntry)
@@ -530,7 +530,7 @@ class KDropFolderFileTransferEngine extends KDropFolderEngine
 		$updatedEntry = KBatchBase::$kClient->baseEntry->updateContent($matchedEntry->id, $resource, $data->conversionProfileId);
 		$result = KBatchBase::$kClient->doMultiRequest();
 		
-		if ($updatedEntry && $updatedEntry instanceof KalturaBaseEntry)
+		if ($result[0] && ($result[0] instanceof KalturaBaseEntry))
 		{
 			$this->createCategoryAssociations ($dropFolder, $updatedEntry->userId, $updatedEntry->id);
 		}
