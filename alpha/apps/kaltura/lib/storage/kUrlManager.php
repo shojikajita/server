@@ -220,6 +220,7 @@ class kUrlManager
 			$tokenizer = $this->getTokenizer();
 			if ($tokenizer)
 			{
+				KalturaLog::debug("assaf path:".$url);
 				$url = $tokenizer->tokenizeSingleUrl($url);
 				kApiCache::disableCache();
 			}

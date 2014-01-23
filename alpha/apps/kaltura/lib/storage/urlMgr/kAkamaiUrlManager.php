@@ -5,7 +5,7 @@
  */
 class kAkamaiUrlManager extends kUrlManager
 {
-	const SECURE_HD_AUTH_ACL_REGEX = '/^[^,]*/';
+	const SECURE_HD_AUTH_ACL_REGEX = '/(^[^,]*)/';
 	
 	/**
 	 * @return kUrlTokenizer
