@@ -1158,9 +1158,13 @@ class Partner extends BasePartner
 	public function getAlwaysAllowedPermissionNames()
 	{
 		$names = $this->getFromCustomData('always_allowed_permission_names');
-		$namesArray = explode(',', $names);
-		if (!count($namesArray) || !in_array(PermissionName::ALWAYS_ALLOWED_ACTIONS, $namesArray)) {
-			$names = PermissionName::ALWAYS_ALLOWED_ACTIONS.','.$names;
+		if (!$this->getEnabledService(PermissionName::FEATURE_DISABLE_ALWAYS_ALLOWED_ACTIONS_PERMISSION))
+		{
+			$namesArray = explode(',', $names);
+			if (!count($namesArray) || !in_array(PermissionName::ALWAYS_ALLOWED_ACTIONS, $namesArray))
+			{
+				$names = PermissionName::ALWAYS_ALLOWED_ACTIONS . ',' . $names;
+			}
 		}
 		$names = trim($names, ',');
 		return $names;

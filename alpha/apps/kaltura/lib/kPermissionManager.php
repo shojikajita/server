@@ -267,13 +267,16 @@ class kPermissionManager implements kObjectCreatedEventConsumer, kObjectChangedE
 		// add always allowed permissions
 		if (self::$operatingPartner) {
 			$alwaysAllowed = self::$operatingPartner->getAlwaysAllowedPermissionNames();
-			$alwaysAllowed = array_map('trim', explode(',', $alwaysAllowed));
+			if ($alwaysAllowed)
+				$alwaysAllowed = array_map('trim', explode(',', $alwaysAllowed));
+			else
+				$alwaysAllowed = array();
 		}
 		else {
 			$alwaysAllowed = array(PermissionName::ALWAYS_ALLOWED_ACTIONS);
 		}
 		$tmpPermissionNames = array_merge($tmpPermissionNames, $alwaysAllowed);
-		
+
 		// if the request sent from the internal server set additional permission allowing access without KS
 		// from internal servers
 		if (kIpAddressUtils::isInternalIp())
