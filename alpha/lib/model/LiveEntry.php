@@ -642,6 +642,33 @@ abstract class LiveEntry extends entry
 		$this->putInCustomData('push_publish_configurations', $v);
 	}
 	
+	
+	public function getRtmpClosedCaptionsEventName ()
+	{
+		return $this->getFromCustomData('rtmp_closed_captions_event_name');
+	}
+	
+	public function setRtmpClosedCaptionsEventName ($v)
+	{
+		$this->putInCustomData('rtmp_closed_captions_event_name', $v);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getClosedCaptionObjectMapping ()
+	{
+		return $this->getFromCustomData('closed_caption_object_mapping');
+	}
+	
+	/**
+	 * @param array $v
+	 */
+	public function setClosedCaptionObjectMapping ($v)
+	{
+		$this->putInCustomData('closed_caption_object_mapping', $v);
+	}
+	
 	/**
 	 * @return boolean
 	 */

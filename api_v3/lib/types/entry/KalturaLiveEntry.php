@@ -63,6 +63,18 @@ abstract class KalturaLiveEntry extends KalturaMediaEntry
 	 */
 	public $firstBroadcast;
 	
+	/**
+	 * Name of event sent over Flash netstream to indicate closed captions
+	 * @var string
+	 * @requiresPermission insert,update
+	 */
+	public $rtmpClosedCaptionsEventName;
+	
+	/**
+	 * 
+	 */
+	public $closedCaptionObjectMapping
+	
 	private static $map_between_objects = array
 	(
 		"offlineMessage",
