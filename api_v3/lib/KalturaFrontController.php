@@ -413,8 +413,34 @@ class KalturaFrontController
 		    KalturaLog::crit($ex);
 			$object = new KalturaAPIException(KalturaErrors::INTERNAL_SERVERL_ERROR);
 		}
-		
-		return $object;
+
+		return $this->handleErrorMapping($object);
+	}
+
+	protected function handleErrorMapping(KalturaAPIException $apiException)
+	{
+		$map = kConf::hasMap("api_error_map") ? kConf::getMap("api_error_map") : array();
+		$partnerId = kCurrentContext::getCurrentPartnerId();
+		if (!isset($map[$partnerId]))
+			return $apiException;
+
+		$partnerMap = $map[$partnerId];
+		if (!is_array($partnerMap))
+			return $apiException;
+
+		$currentErrorCode = $apiException->getCode();
+		foreach($partnerMap as $errorToReturn => $errorsToCatch)
+		{
+			if (is_array($errorsToCatch) && in_array($currentErrorCode, $errorsToCatch))
+			{
+				$reflectionException = new ReflectionClass("KalturaAPIException");
+				$errorStr = constant('KalturaErrors::'.$errorToReturn);
+				$args = array_merge(array($errorStr), $apiException->getArgs());
+				return $reflectionException->newInstanceArgs($args);
+			}
+		}
+
+		return $apiException;
 	}
 	
 	

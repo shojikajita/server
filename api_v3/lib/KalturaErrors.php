@@ -16,6 +16,9 @@ class KalturaErrors extends APIErrors
 	// should be used for internal actions only
 	const INTERNAL_SERVERL_ERROR_DEBUG = "INTERNAL_SERVERL_ERROR;ERROR;Internal server error occurred \"@ERROR@\"";
 
+	// to be used when no error description should be returned. was added for error mapping, see configurations/api_error_map.template.ini
+	const EMPTY_ERROR = "EMPTY_ERROR;;";
+
 	//
 	const MISSING_KS = "MISSING_KS;;Missing KS, session not established";
 

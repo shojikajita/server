@@ -285,7 +285,9 @@ class KalturaBaseUserService extends KalturaBaseService
 		$loginData = UserLoginDataPeer::getByEmail($email);
 		if ($loginData)
 		{
-			$this->validateApiAccessControl($loginData->getLastLoginPartnerId());
+			$partnerId = $loginData->getLastLoginPartnerId();
+			kCurrentContext::$partner_id = $partnerId; // required for api error mapping to work
+			$this->validateApiAccessControl($partnerId);
 		}
 	}
 }
