@@ -71,9 +71,10 @@ abstract class KalturaLiveEntry extends KalturaMediaEntry
 	public $rtmpClosedCaptionsEventName;
 	
 	/**
-	 * 
+	 * @var KalturaKeyValueArray
+	 * @requiresPermission insert,update
 	 */
-	public $closedCaptionObjectMapping
+	public $closedCaptionObjectMapping;
 	
 	private static $map_between_objects = array
 	(
@@ -85,6 +86,8 @@ abstract class KalturaLiveEntry extends KalturaMediaEntry
 		"recordedEntryId",
 		"pushPublishEnabled",
 		"firstBroadcast",
+		"rtmpClosedCaptionsEventName",
+		"closedCaptionObjectMapping",
 	);
 	
 	/* (non-PHPdoc)
