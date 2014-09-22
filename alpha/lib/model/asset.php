@@ -87,6 +87,9 @@ class asset extends Baseasset implements ISyncableFile
 	const FILE_SYNC_ASSET_SUB_TYPE_CONVERT_LOG = 2;
 	const FILE_SYNC_ASSET_SUB_TYPE_ISM = 3;
 	const FILE_SYNC_ASSET_SUB_TYPE_ISMC = 4;
+	
+	const FILE_SYNC_ASSET_SUB_TYPE_LIVE_PRIMARY = 5; 
+	const FILE_SYNC_ASSET_SUB_TYPE_LIVE_SECONDARY = 6;
 
 	const CUSTOM_DATA_FIELD_PARTNER_DESCRIPTION = "partnerDescription";
 	const CUSTOM_DATA_FIELD_PARTNER_DATA = "partnerData";
